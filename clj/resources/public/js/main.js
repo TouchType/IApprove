@@ -16,7 +16,7 @@ $(function() {
 
 	// do submits via websocket
 	$('form').each(function() {
-		var for_elems = $(this).find('.for');
+		var _this = $(this);
 		var path = $(this).attr('action');
 		var url = websocket_url(path);
 		console.log("Connecting to " + url);
@@ -26,10 +26,13 @@ $(function() {
 			$.each(JSON.parse(e.data), function(k,v) {
 				console.log("message:", k, v);
 				if (k === "tab-changed") {
-					for_elems
-						.val(v.title)
+					_this.find('a.for')
 						.text(v.title)
 						.attr('href', v.url);
+					_this.find('input[name=title]')
+						.val(v.title);
+					_this.find('input[name=url]')
+						.val(v.url);
 				} else {
 					console.error("Unhandled request:", k, v);
 				}
