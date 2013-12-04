@@ -19,25 +19,43 @@ $(function() {
 		var _this = $(this);
 		var path = $(this).attr('action');
 		var url = websocket_url(path);
-		console.log("Connecting to " + url);
-		var connection = $.gracefulWebSocket(url);
-		console.log("Connected.");
-		connection.onmessage = function(e) {
-			$.each(JSON.parse(e.data), function(k,v) {
-				console.log("message:", k, v);
-				if (k === "tab-changed") {
-					_this.find('a.for')
-						.text(v.title)
-						.attr('href', v.url);
-					_this.find('input[name=title]')
-						.val(v.title);
-					_this.find('input[name=url]')
-						.val(v.url);
-				} else {
-					console.error("Unhandled request:", k, v);
+
+		function handle_message(k,v) {
+			console.log("message:", k, v);
+			if (k === "tab-changed") {
+				_this.find('a.for')
+					.text(v.title)
+					.attr('href', v.url);
+				_this.find('input[name=title]')
+					.val(v.title);
+				_this.find('input[name=url]')
+					.val(v.url);
+			} else {
+				console.error("Unhandled request:", k, v);
+			}
+		}
+
+		var message_queue = [];
+		var connection;
+		function connect() {
+			connection = $.gracefulWebSocket(url);
+			connection.onmessage = function(e) {
+				$.each(JSON.parse(e.data), handle_message);
+			};
+			connection.onopen = function() {
+				console.log("Connected.");
+				while(message_queue.length) {
+					connection.send(message_queue[0]);
+					message_queue.shift();
 				}
-			});
-		};
+			};
+			connection.onclose = function() {
+				console.warn("Connection closed.");
+				setTimeout(connect, 4000);
+			};
+		}
+		console.log("Connecting to " + url);
+		connect();
 
 		$(this).submit(function(e) {
 			e.preventDefault();
@@ -45,7 +63,13 @@ $(function() {
 			$.each($(this).serializeArray(), function(i,e) {
 				form_data[e.name] = e.value;
 			});
-			connection.send(JSON.stringify({approves: form_data}));
+			var message = JSON.stringify({approves: form_data});
+			if (connection) {
+				connection.send(message);
+			} else {
+				console.warn('Not connected. Sending later.');
+				message_queue.push(message);
+			}
 			$(this).find('input[name=comment]')
 				.val('')
 				.focus();
