@@ -3,10 +3,11 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
-                 [http-kit            "2.1.13"]
-                 [cheshire            "5.2.0"]
-                 [compojure 					"1.1.6"]
-                 [ring/ring-json			"0.2.0"]
-                 [javax.servlet/servlet-api "2.5"]]
+  :dependencies [[org.clojure/clojure       "1.5.1"]
+                 [http-kit                  "2.1.13"]
+                 [cheshire                  "5.2.0"]
+                 [compojure 					      "1.1.6"]
+                 [ring/ring-json			      "0.2.0"]
+                 [javax.servlet/servlet-api "2.5"]
+                 [congomongo                "0.4.1"]]
   :main i-approve.core/run)

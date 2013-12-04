@@ -5,7 +5,8 @@
 						[compojure.handler :refer [api]]
 						[ring.middleware.json :as middleware]
             [clojure.pprint :refer [pprint]]
-						[cheshire.core :refer [generate-string parse-string]]))
+						[cheshire.core :refer [generate-string parse-string]]
+            [somnium.congomongo :as mongo]))
 
 (def listeners (atom {}))
 (def clients (atom {}))
@@ -30,9 +31,15 @@
                             (when on-receive-fn
                               (on-receive-fn (parse-string data))))))))
 
+(def mongo-conn (mongo/make-connection "i-approve-test"))
+
 (defroutes my-routes
   (GET "/i-approve" []
-    (web-socket-handler clients (partial tell! listeners)))
+    (web-socket-handler clients (fn [data]
+                                  (tell! listeners data)
+                                  (println :action data)
+                                  (mongo/with-mongo mongo-conn
+                                    (mongo/insert! :actions data)))))
   (GET "/who-approves" []
     (web-socket-handler listeners (partial tell! clients)))
   (GET "/" []
@@ -50,7 +57,7 @@
 		(println "Starting server on port" port)
 		(run-server app {:port port})))
 
-(future (loop [i 1]
+#_(future (loop [i 1]
   (Thread/sleep 6000)
   (tell! listeners {:approves {:who "mr. nobody" :comment (str "test " i)}})
   (recur (inc i))))

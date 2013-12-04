@@ -72,8 +72,7 @@ $(function() {
 				message_queue.push(message);
 			}
 			$(this).find('input[name=comment]')
-				.val('')
-				.focus();
+				.val('');
 		});
 	});
 
