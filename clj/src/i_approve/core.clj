@@ -6,10 +6,16 @@
 						[ring.middleware.json :as middleware]
             [clojure.pprint :refer [pprint]]
 						[cheshire.core :refer [generate-string parse-string]]
-            [somnium.congomongo :as mongo]))
+            [somnium.congomongo :refer :all]))
 
 (def listeners (atom {}))
 (def clients (atom {}))
+
+(def last-status (atom nil))
+(defn save-last-status!
+  [status]
+  (reset! last-status status))
+
 
 (defn tell!
   [who what]
@@ -19,11 +25,13 @@
            (generate-string what)
            false)))
 
-(defn web-socket-handler [client-container on-receive-fn]
+(defn web-socket-handler [client-container on-connect-fn on-receive-fn]
   (fn [request]
     (with-channel request channel
       (println "connected:" channel)
       (swap! client-container assoc channel true)
+      (when on-connect-fn
+        (on-connect-fn))
       (on-close   channel (fn [status]
                             (swap! client-container dissoc channel)
                             (println "disconnected:" channel "status:" status)))
@@ -31,17 +39,27 @@
                             (when on-receive-fn
                               (on-receive-fn (parse-string data))))))))
 
-(def mongo-conn (mongo/make-connection "i-approve-test"))
+(def db (make-connection "i-approve-test"))
 
 (defroutes my-routes
   (GET "/i-approve" []
-    (web-socket-handler clients (fn [data]
-                                  (tell! listeners data)
-                                  (println :action data)
-                                  (mongo/with-mongo mongo-conn
-                                    (mongo/insert! :actions data)))))
+    (web-socket-handler
+      clients
+      (fn []
+        (when @last-status
+          (tell! clients @last-status)))
+      (fn [data]
+        (tell! listeners data)
+        (with-mongo db (insert! :comments data)))))
   (GET "/who-approves" []
-    (web-socket-handler listeners (partial tell! clients)))
+    (web-socket-handler
+      listeners
+      nil
+      (fn [data]
+        (tell! clients data)
+        (with-mongo db (insert! :actions data))
+        (when (get data "tab-changed")
+              (save-last-status! data)))))
   (GET "/" []
   	(clojure.java.io/resource "public/index.html"))
   (route/resources "/")
