@@ -5,6 +5,7 @@ div.iapprove-container {
 	right: 20px;
 	bottom: 0;
 	width: auto;
+	pointer-events: none;
 }
 
 div.iapprove-notification {
@@ -19,6 +20,7 @@ div.iapprove-notification {
 	background-size: 50px 50px;
 	background-repeat: no-repeat;
 	background-position: 18px 14px;
+	pointer-events: auto;
 }
 
 div.iapprove-notification.iapprove-comment {
