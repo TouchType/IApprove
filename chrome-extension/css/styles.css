@@ -4,6 +4,7 @@ div.iapprove-container {
 	top: 20px;
 	right: 20px;
 	bottom: 0;
+	width: auto;
 }
 
 div.iapprove-notification {
