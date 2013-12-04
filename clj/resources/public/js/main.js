@@ -1,3 +1,8 @@
+function websocket_url(path) {
+	var loc = window.location;
+	return "ws://" + loc.host + path;
+}
+
 $(function() {
 
 	// restore/save who field value as cookies
@@ -9,20 +14,32 @@ $(function() {
 			$.cookie($(this).attr('name'), $(this).val());
 		});
 
-	// handle submit buttons staying on the same page
-	$('form').submit(function(e) {
-		e.preventDefault();
-		$.ajax({
-			url: $(this).attr('action'),
-			type: $(this).attr('method').toUpperCase(),
-			data: $(this).serializeArray(),
-			success: function(d) {
-				console.log(d);
-				$('input[name=comment]').val('').focus();
-			},
-			error: function(e) {
-				console.error(e);
-			}
+	// do submits via websocket
+	$('form').each(function() {
+		var for_elem = $(this).find('input[name=for]');
+		var path = $(this).attr('action');
+		var url = websocket_url(path);
+		console.log("Connecting to " + url);
+		var connection = $.gracefulWebSocket(url);
+		console.log("Connected.");
+		connection.onmessage = function(e) {
+			$.each(JSON.parse(e.data), function(k,v) {
+				console.log("message:", k, v);
+				if (k === "tab-changed") {
+					for_elem.val(v.title);
+				} else {
+					console.error("Unhandled request:", k, v);
+				}
+			});
+		};
+
+		$(this).submit(function(e) {
+			e.preventDefault();
+			var form_data = {};
+			$.each($(this).serializeArray(), function(i,e) {
+				form_data[e.name] = e.value;
+			});
+			connection.send(JSON.stringify({approves: form_data}));
 		});
 	});
 

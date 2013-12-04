@@ -8,42 +8,33 @@
 						[cheshire.core :refer [generate-string parse-string]]))
 
 (def listeners (atom {}))
+(def clients (atom {}))
 
-(defn approves
-	[params]
-	(println (:who params) "approves" "-" (str "\"" (:comment params) "\""))
-  (doseq [client @listeners]
-    (send! (key client)
-    			 (generate-string {:approves params})
-           false))
-	{:body {:success true}})
-
-(defn tab
-  [params]
-  (println "tab switch" (get params "tab-changed"))
-    (doseq [client @listeners]
-    (send! (key client)
-           (generate-string {:tab (get params "tab-changed")})
+(defn tell!
+  [who what]
+  (println what who)
+  (doseq [connection @who]
+    (send! (key connection)
+           (generate-string what)
            false)))
-; TODO: have separate list of web clients,
-;       update them with name of new tab,
-;       use websocket to send "like" to server
 
-(defn ws-listen [request]
-  (with-channel request channel
-    (println channel "connected" channel)
-    (swap! listeners assoc channel true)
-    (on-close channel (fn [status]
-                        (swap! listeners dissoc channel)
-                        (println channel "disconnected. status:" status)))
-    (on-receive channel (fn [data]
-                          (tab (parse-string data))))))
+(defn web-socket-handler [client-container on-receive-fn]
+  (fn [request]
+    (with-channel request channel
+      (println "connected:" channel)
+      (swap! client-container assoc channel true)
+      (on-close   channel (fn [status]
+                            (swap! client-container dissoc channel)
+                            (println "disconnected:" channel "status:" status)))
+      (on-receive channel (fn [data]
+                            (when on-receive-fn
+                              (on-receive-fn (parse-string data))))))))
 
 (defroutes my-routes
-  (POST "/i-approve"
-    {params :params} (approves params))
+  (GET "/i-approve" []
+    (web-socket-handler clients (partial tell! listeners)))
   (GET "/who-approves" []
-  	ws-listen)
+    (web-socket-handler listeners (partial tell! clients)))
   (GET "/" []
   	(clojure.java.io/resource "public/index.html"))
   (route/resources "/")
@@ -61,5 +52,5 @@
 
 (future (loop [i 1]
   (Thread/sleep 6000)
-  (approves {:who "nobody" :comment (str "test " i)})
+  (tell! listeners {:approves {:who "mr. nobody" :comment (str "test " i)}})
   (recur (inc i))))
