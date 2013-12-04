@@ -21,6 +21,7 @@ div.iapprove-notification {
 	background-repeat: no-repeat;
 	background-position: 18px 14px;
 	pointer-events: auto;
+	text-align: left;
 }
 
 div.iapprove-notification.iapprove-comment {

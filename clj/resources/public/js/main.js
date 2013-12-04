@@ -6,7 +6,7 @@ function websocket_url(path) {
 $(function() {
 
 	// restore/save who field value as cookies
-	$('input[name=who]')
+	$('*[name=who]')
 		.each(function() {
 			$(this).val($.cookie($(this).attr('name')));
 		})
@@ -26,9 +26,9 @@ $(function() {
 				_this.find('a.for')
 					.text(v.title)
 					.attr('href', v.url);
-				_this.find('input[name=title]')
+				_this.find('*[name=title]')
 					.val(v.title);
-				_this.find('input[name=url]')
+				_this.find('*[name=url]')
 					.val(v.url);
 			} else {
 				console.error("Unhandled request:", k, v);
@@ -71,17 +71,38 @@ $(function() {
 				console.warn('Not connected. Sending later.');
 				message_queue.push(message);
 			}
-			$(this).find('input[name=comment]')
+			$(this).find('*[name=comment]')
 				.val('');
 		});
 	});
 
 	// focus a text box
-	$.each(['input[name=who]', 'input[name=comment]'], function(i,selector) {
+	$.each(['*[name=who]', '*[name=comment]'], function(i,selector) {
 		var e = $(selector);
 		if (!e.val()) {
 			e.focus();
 			return false;
+		}
+	});
+
+	// move to next box when "who" filled in
+	$('*[name=who]').keydown(function(e){
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			$(this)
+				.closest('form')
+				.find('*[name=comment]')
+				.focus();
+		}
+	});
+
+	// submit when pressing enter on comment
+	$('textarea').keydown(function(e) {
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			$(this)
+				.closest('form')
+				.submit();
 		}
 	});
 });
