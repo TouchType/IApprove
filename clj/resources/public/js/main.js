@@ -16,7 +16,7 @@ $(function() {
 
 	// do submits via websocket
 	$('form').each(function() {
-		var for_elem = $(this).find('input[name=for]');
+		var for_elems = $(this).find('.for');
 		var path = $(this).attr('action');
 		var url = websocket_url(path);
 		console.log("Connecting to " + url);
@@ -26,7 +26,10 @@ $(function() {
 			$.each(JSON.parse(e.data), function(k,v) {
 				console.log("message:", k, v);
 				if (k === "tab-changed") {
-					for_elem.val(v.title);
+					for_elems
+						.val(v.title)
+						.text(v.title)
+						.attr('href', v.url);
 				} else {
 					console.error("Unhandled request:", k, v);
 				}
@@ -40,6 +43,9 @@ $(function() {
 				form_data[e.name] = e.value;
 			});
 			connection.send(JSON.stringify({approves: form_data}));
+			$(this).find('input[name=comment]')
+				.val('')
+				.focus();
 		});
 	});
 
