@@ -18,7 +18,7 @@ function handle_message(k,v) {
 }
 
 var message_queue = [];
-var ws = null;
+var ws;
 function connect() {
 	console.log("Connecting to " + WS_URL);
 	ws = $.gracefulWebSocket(WS_URL);
@@ -35,6 +35,7 @@ function connect() {
 	ws.onclose = function() {
 		console.warn("Connection closed.");
 		setTimeout(connect, 4000);
+		ws = null;
 	};
 }
 connect();

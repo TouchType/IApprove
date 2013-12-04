@@ -52,6 +52,7 @@ $(function() {
 			connection.onclose = function() {
 				console.warn("Connection closed.");
 				setTimeout(connect, 4000);
+				connection = null;
 			};
 		}
 		console.log("Connecting to " + url);
