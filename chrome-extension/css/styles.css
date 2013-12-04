@@ -1,0 +1,76 @@
+div.iapprove-container {
+	position: fixed;
+	z-index: 9999999999;
+	top: 20px;
+	right: 20px;
+	bottom: 0;
+}
+
+div.iapprove-notification {
+	width: 250px;
+	padding: 1.2em 2em 2.0em 80px;
+	box-shadow: 0 0 5px #777;
+	background-color: white;
+	margin: 10px 0;
+	color: #000;
+	cursor: default;
+	background-image: url('chrome-extension://__MSG_@@extension_id__/like-512.png');
+	background-size: 50px 50px;
+	background-repeat: no-repeat;
+	background-position: 18px 14px;
+}
+
+div.iapprove-notification.iapprove-comment {
+	background-position: 16px 22px;
+}
+
+div.iapprove-notification .iapprove-who:after {
+	color: #000;
+	font-weight: normal;
+}
+
+div.iapprove-notification.iapprove-like .iapprove-who:after {
+	content: ' likes this';
+	color: #aaa;
+}
+
+div.iapprove-notification.iapprove-comment {
+	background-image: url('chrome-extension://__MSG_@@extension_id__/comment-512.png');
+}
+
+div.iapprove-notification h3 {
+	margin: 1em 0 0 0;
+	font-size: 16px;
+	font-family: sans-serif;
+}
+
+div.iapprove-notification.iapprove-comment h3 {
+	display: inline-block;
+}
+div.iapprove-notification.iapprove-comment h3:after {
+	color: #aaa;
+	content: "-";
+	margin: 0 0.5em;
+}
+
+span.iapprove-who {
+	color: #66f;
+	font-weight: bold;
+}
+
+div.iapprove-notification q {
+	display: inline;
+	color: #000;
+	margin-top: 1.2em;
+	padding: 0;
+	font-size: 16px;
+	font-family: sans-serif;
+	font-style: italic;
+	text-align: left;
+}
+div.iapprove-notification q:before {
+	content: "\201c";
+}
+div.iapprove-notification q:after {
+	content: "\201d";
+}

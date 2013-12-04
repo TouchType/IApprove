@@ -1,0 +1,20 @@
+input {
+	width: 200px;
+}
+
+input[type="submit"] {
+	border: 2px solid transparent;
+	color: transparent;
+	padding: 1em;
+	background-color: transparent;
+	background-image: url('images/like-512.png');
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100px 100px;
+	height: 150px;
+	cursor: pointer;
+}
+
+input[type="submit"]:active {
+	border-color: #777;
+}
