@@ -12,7 +12,7 @@
 
 (defn tell!
   [who what]
-  (println what who)
+  (println what)
   (doseq [connection @who]
     (send! (key connection)
            (generate-string what)
