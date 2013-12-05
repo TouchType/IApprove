@@ -11,11 +11,10 @@
 (def listeners (atom {}))
 (def clients (atom {}))
 
-(def last-status (atom nil))
-(defn save-last-status!
-  [status]
-  (reset! last-status status))
-
+(def last-actions (atom {}))
+(defn save-last-action!
+  [action]
+  (swap! last-actions merge action))
 
 (defn tell!
   [who what]
@@ -46,8 +45,7 @@
     (web-socket-handler
       clients
       (fn []
-        (when @last-status
-          (tell! clients @last-status)))
+        (tell! clients @last-actions))
       (fn [data]
         (tell! listeners data)
         (with-mongo db (insert! :comments data)))))
@@ -58,10 +56,7 @@
       (fn [data]
         (tell! clients data)
         (with-mongo db (insert! :actions data))
-        (doseq [[k v] data]
-          (case k
-            "tab-changed" (save-last-status! data)
-            "screenshot"  (spit "/Users/chetan/Desktop/screenshot.jpg" v))))))
+        (save-last-action! data))))
   (GET "/" []
   	(clojure.java.io/resource "public/index.html"))
   (route/resources "/")
