@@ -58,8 +58,10 @@
       (fn [data]
         (tell! clients data)
         (with-mongo db (insert! :actions data))
-        (when (get data "tab-changed")
-              (save-last-status! data)))))
+        (doseq [[k v] data]
+          (case k
+            "tab-changed" (save-last-status! data)
+            "screenshot"  (spit "/Users/chetan/Desktop/screenshot.jpg" v))))))
   (GET "/" []
   	(clojure.java.io/resource "public/index.html"))
   (route/resources "/")

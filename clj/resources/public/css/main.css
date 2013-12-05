@@ -1,6 +1,8 @@
 body {
 	font-family: "Helvetica Neue", sans-serif;
 	color: #333;
+	padding: 0;
+	margin: 0;
 }
 
 h3 {
@@ -14,6 +16,10 @@ h3 {
 	text-align: center;
 }
 
+form {
+	position: relative;
+}
+
 form > * {
 	width: 100%;
 }
@@ -23,15 +29,15 @@ input, textarea {
 }
 
 input[type="submit"] {
+	right: 5px;
 	border: none;
-	padding-top: 120px;
 	color: transparent;
 	background-color: transparent;
 	background-image: url('images/like-512.png');
 	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: 100px 100px;
-	height: 150px;
+	background-position: center right;
+	background-size: contain;
+	width: 40px;
 	cursor: pointer;
 	font: inherit;
 }
@@ -40,5 +46,37 @@ input[type="submit"]:active {
 }
 
 textarea {
-	margin-top: 1em;
+	left: 0;
+	width: 240px;
+	border: 1px solid ;
 }
+
+textarea, input[type=submit] {
+	height: 40px;
+	display: block;
+	vertical-align: middle;
+	margin-top: 1em;
+	position: absolute;
+}
+
+.screenshot {
+	height: 200px;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid rgba(0,0,0,0.3);
+	position: relative;
+}
+
+.screenshot > a {
+	display: inline-block;
+	padding: 0.2em 0;
+	color: #fff;
+	text-shadow: 0 0 4px #333;
+	font-weight: bold;
+	text-decoration: none;
+	background-color: rgba(0,0,0,0.3);
+	width: 100%;
+	margin: 0;
+}
+

@@ -30,6 +30,9 @@ $(function() {
 					.val(v.title);
 				_this.find('*[name=url]')
 					.val(v.url);
+			} else if (k === "screenshot") {
+				_this.find('.screenshot')
+					.css('background-image', 'url(data:' + v + ')');
 			} else {
 				console.error("Unhandled request:", k, v);
 			}

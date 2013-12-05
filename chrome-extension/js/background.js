@@ -40,6 +40,15 @@ function connect() {
 }
 connect();
 
+function send_message(m) {
+	if (ws) {
+		ws.send(m)
+	} else {
+		console.warn("Not connected. Sending later.");
+		message_queue.push(m);
+	};
+}
+
 function handle_tab_change(tab_id) {
 	if (tab_id === undefined) {
 		chrome.tabs.query({active: true, currentWindow: true}, function(tab_info) {
@@ -52,13 +61,16 @@ function handle_tab_change(tab_id) {
 	chrome.tabs.get(tab_id, function(t) {
 		var tab = {url: t.url, title: t.title};
 		console.log('active page changed: ', tab);
-		var message = JSON.stringify({"tab-changed": tab});
-		if (ws) {
-			ws.send(message)
-		} else {
-			console.warn("Not connected. Sending later.");
-			message_queue.push(message);
-		};
+		send_message(JSON.stringify({'tab-changed': tab}))
+
+		// send a screenshot to the server
+		chrome.tabs.captureVisibleTab(t.windowId, {quality: 5}, function(data) {
+			if (!data) {
+				console.warn('Unable to get screenshot');
+				return;
+			}
+			send_message(JSON.stringify({'screenshot': data}));
+		});
 	});
 }
 
