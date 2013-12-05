@@ -20,7 +20,8 @@ function showNotification(req) {
 				$('<h3>').append(
 					$('<span>')
 						.addClass('iapprove-who')
-						.text(req.who)
+						.addClass(req.who ? null : 'iapprove-anonymous')
+						.text(req.who ? req.who : 'Anonymous')
 				),
 				req.comment
 					? $('<q>').text(req.comment)

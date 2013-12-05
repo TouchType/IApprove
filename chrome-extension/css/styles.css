@@ -62,6 +62,10 @@ span.iapprove-who {
 	font-weight: bold;
 }
 
+span.iapprove-who.iapprove-anonymous {
+	color: #aaa;
+}
+
 div.iapprove-notification q {
 	display: inline;
 	color: #000;
