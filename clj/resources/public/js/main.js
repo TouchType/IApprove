@@ -98,7 +98,7 @@ $(function() {
 
 	// submit when pressing enter on comment
 	$('textarea').keydown(function(e) {
-		if (e.keyCode == 13) {
+		if (!e.shiftKey && e.keyCode == 13) {
 			e.preventDefault();
 			$(this)
 				.closest('form')
