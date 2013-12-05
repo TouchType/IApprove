@@ -84,7 +84,10 @@ chrome.tabs.onActivated.addListener(function(tab_info) {
 
 // watch for tab updates
 chrome.tabs.onUpdated.addListener(function(tab_info) {
-	handle_tab_change(tab_info.tabId);
+	// need to wait a bit while the screen updates
+	setTimeout(function() {
+		handle_tab_change(tab_info.tabId);
+	}, 250);
 });
 
 // watch for window changes
