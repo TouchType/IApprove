@@ -49,6 +49,14 @@ function send_message(m) {
 	};
 }
 
+var periodic_updater;
+function reset_periodic_updater() {
+	if (periodic_updater) {
+		clearInterval(periodic_updater);
+	}
+	periodic_updater = setInterval(handle_tab_change, 5000);
+}
+
 function handle_tab_change(tab_id) {
 	if (tab_id === undefined) {
 		chrome.tabs.query({active: true, currentWindow: true}, function(tab_info) {
@@ -71,6 +79,8 @@ function handle_tab_change(tab_id) {
 			}
 			send_message(JSON.stringify({'screenshot': data}));
 		});
+
+		reset_periodic_updater();
 	});
 }
 
@@ -94,3 +104,7 @@ chrome.tabs.onUpdated.addListener(function(tab_info) {
 chrome.windows.onFocusChanged.addListener(function() {
 	handle_tab_change();
 });
+
+// also update periodically
+reset_periodic_updater();
+
