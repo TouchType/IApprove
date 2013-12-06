@@ -38,7 +38,7 @@
                             (when on-receive-fn
                               (on-receive-fn (parse-string data))))))))
 
-(def db (make-connection "i-approve-test"))
+(def db (make-connection "i-approve"))
 
 (defroutes my-routes
   (GET "/i-approve" []
