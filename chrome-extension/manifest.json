@@ -6,7 +6,7 @@
 	"icons" : { "512" : "like-512.png" },
 	"permissions": [
 		"tabs",
-		"*://*/*"
+		"<all_urls>"
 	],
 	"background": {
     	"scripts": ["js/jquery-1.10.2.min.js", "js/jquery.gracefulWebSocket.js", "js/background.js"]
