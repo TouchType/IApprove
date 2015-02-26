@@ -54,3 +54,6 @@ When finished, *don't forget to disable the iApprove browser extension*.
 All "likes" and "comments" are stored in the `i-approve` MongoDB database in the `comments` collection.
 (A "like" is a "comment" that has no message.)
 
+# License
+
+Licensed under the [MIT License](LICENSE.txt). Copyright (c) 2015 TouchType Ltd.
