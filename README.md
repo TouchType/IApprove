@@ -2,7 +2,9 @@
 
 # iApprove
 
-A "Like" button for your presentation running in Chrome/Chromium. Built on Chrome/Clojure/MongoDB. You can also add comments!
+A "Like" button for your presentation running in Chrome/Chromium. You can also add comments!
+
+Built on Chrome/Clojure/MongoDB.
 
 <img src="screenshots/presenter.png" height="320"><img src="screenshots/participant.png" height="320">
 
@@ -40,6 +42,7 @@ A "Like" button for your presentation running in Chrome/Chromium. Built on Chrom
 
 1. Find your IP address. (You can use `ifconfig` or `ipconfig` on Windows.)
 2. Send the link with your IP address, using port 9090, to all participants. (They must be connected to the same network!)
+
 - It should look something like this: `http://10.0.2.45:9090`
 
 Participants should follow the link and enter their name in the field provided. When they press "Like" a notification will appear in your current browser tab.
