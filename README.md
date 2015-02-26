@@ -1,10 +1,10 @@
-<img src="chrome-extension/like-512.png" align="right" height="50">
+<img src="chrome-extension/like-512.png" align="right" height="70">
 
 # iApprove
 
 A "Like" button for your presentation running in Chrome/Chromium. Built on Chrome/Clojure/MongoDB. You can also add comments!
 
-<img src="screenshots/presenter.png" height="300"><img src="screenshots/participant.png" height="300">
+<img src="screenshots/presenter.png" height="320"><img src="screenshots/participant.png" height="320">
 
 ## Features
 
