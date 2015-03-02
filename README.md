@@ -2,6 +2,12 @@
 
 # iApprove
 
+***
+
+THIS REPOSITORY IS DEPRECATED. Please use: https://github.com/chetbox/iApprove
+
+***
+
 A "Like" button for your presentation running in Chrome/Chromium. You can also add comments!
 
 Built on Chrome/Clojure/MongoDB.
